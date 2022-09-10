@@ -1,5 +1,5 @@
 # Ignore the src folder which may contain confidential files.
-
+files-to-minify
 
 # Logs
 logs
