@@ -11,7 +11,10 @@
     "module": "nodenext"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "clean": "npx gulp build:clean",
+    "babel": "npx gulp build:babel",
+    "build": "npx gulp",
+    "help": "node config.js --help"
   },
   "repository": {
     "type": "git",
@@ -27,9 +30,12 @@
     "gulp": "4.0.2",
     "gulp-babel": "8.0.0",
     "gulp-concat": "2.6.1",
+    "gulp-debug": "4.0.0",
     "gulp-if": "3.0.0",
     "gulp-rename": "2.0.0",
-    "gulp-sourcemaps": "3.0.0",
-    "lazypipe": "1.0.2"
+    "gulp-sourcemaps": "3.0.0"
+  },
+  "dependencies": {
+    "yargs": "17.5.1"
   }
 }

@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto'
+
 export function callCb(cb, ...args) {
 
   if (typeof cb === 'function') {
@@ -193,5 +195,23 @@ export function isNonEmptyObject(objectLike) {
 export function isNonEmptyArray(arrayLike) {
 
   return (isValidArray(arrayLike) && arrayLike.length > 0);
+
+}
+
+/**
+ * Calculate checksum based on provided algorithm.
+ * @param {*} data 
+ * @param {*} algorithm 
+ * @param {'utf8' | 'utf-8' | 'utf16le' | 'latin1' | 'ascii' | 'binary' | 'ucs2' | 'ucs-2' | 'base64' | 'base64url' | 'hex' | 'binary'} inputEncoding 
+ * @param {'base64' | 'base64url' | 'hex' | 'binary'} digestEncoding 
+ * 
+ * @returns {string}
+ */
+export function calculateChecksum(data, algorithm = 'md5',
+  inputEncoding = 'utf8', digestEncoding = 'hex') {
+
+  return createHash(algorithm)
+    .update(data, inputEncoding)
+    .digest(digestEncoding);
 
 }
