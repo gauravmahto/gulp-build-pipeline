@@ -1,2 +1,2 @@
 # gulp-build-pipeline
-A gulp build pipeline using Node.js ES module
+A gulp build pipeline to minify JS files using Node.js ES module

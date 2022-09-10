@@ -1,6 +1,3 @@
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
-
 import gulp from 'gulp';
 import rename from 'gulp-rename'
 import gulpSourcemaps from 'gulp-sourcemaps';
@@ -10,25 +7,20 @@ import gulpif from 'gulp-if';
 import debug from 'gulp-debug';
 import { deleteAsync } from 'del';
 
-import { readChecksumFile } from './checksum-utils.js';
 import { FilterFiles } from './filter-files.js';
 import { readGlobalState } from './utils.js';
 
+import { srcGlob, distPath as defaultDistPath } from '../global.js';
+
 const { task, src, dest, series } = gulp;
 const { init, write } = gulpSourcemaps;
-
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const srcRoot = join(__dirname, '..');
-
-const checksumFilePath = join(srcRoot, '.checksum');
-
-const srcGlob = join(srcRoot, 'src/**/*.js');
-const distPath = join(srcRoot, 'dist');
 
 const enableSourceMap = readGlobalState('enableSourceMap');
 const enableMinification = readGlobalState('enableMinification');
 const mergeOutput = readGlobalState('mergeOutput');
 const enableChecksumSupport = readGlobalState('enableChecksumSupport');
+const srcPathGlob = readGlobalState('srcPathGlob');
+const distPath = readGlobalState('distPath');
 
 const babelPresets = [];
 
@@ -38,19 +30,17 @@ if (enableMinification) {
 
 }
 
-await readChecksumFile(checksumFilePath);
-
 task('build:clean', () => {
 
   return deleteAsync([
-    distPath
+    defaultDistPath
   ]);
 
 });
 
 task('build:babel', () => {
 
-  return src(srcGlob)
+  return src(srcPathGlob ?? srcGlob)
     .pipe(gulpif(enableChecksumSupport, new FilterFiles()))
     .pipe(gulpif(enableMinification, rename(path => {
       path.basename += '.min'
@@ -61,8 +51,8 @@ task('build:babel', () => {
     }))
     .pipe(gulpif(mergeOutput, concat('_output.js')))
     .pipe(gulpif(enableSourceMap, write('.')))
-    .pipe(debug({ title: 'Minified' }))
-    .pipe(dest(distPath));
+    .pipe(dest(distPath ?? defaultDistPath))
+    .pipe(debug({ title: 'Minified' }));
 
 });
 

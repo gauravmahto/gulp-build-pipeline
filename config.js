@@ -26,9 +26,23 @@ const argv = yargs(hideBin(process.argv)).
     description: 'Enable checksum support',
     default: true
   }).
+  option('srcPathGlob', {
+    alias: 'srcG',
+    type: 'string',
+    description: 'The absolute path of the source files directory to minify',
+    normalize: true
+  }).
+  option('distPath', {
+    alias: 'dist',
+    type: 'string',
+    description: 'The absolute path of the destination put of the minified files',
+    normalize: true
+  }).
   parse();
 
 globalThis.enableMinification = argv.enableMinification;
 globalThis.enableChecksumSupport = argv.enableChecksumSupport;
 globalThis.enableSourceMap = argv.enableSourceMap;
 globalThis.mergeOutput = argv.mergeOutput;
+globalThis.srcPathGlob = argv.srcPathGlob;
+globalThis.distPath = argv.distPath;

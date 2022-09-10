@@ -1,15 +1,10 @@
-import { dirname, join } from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { Transform } from 'node:stream';
 import { EOL } from 'node:os';
 
 import { createWriteChecksumFileStream, endTheWriteChecksumFileStream, readChecksumFile } from './checksum-utils.js';
 import { calculateChecksum, isNonEmptyObject } from './utils.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-const srcRoot = join(__dirname, '..');
-
-const checksumFilePath = join(srcRoot, '.checksum');
+import { checksumFilePath } from '../global.js';
 
 export class FilterFiles extends Transform {
 
