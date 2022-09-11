@@ -4,19 +4,22 @@ import { EOL } from 'node:os';
 import { createWriteChecksumFileStream, endTheWriteChecksumFileStream, readChecksumFile } from './checksum-utils.js';
 import { calculateChecksum, isNonEmptyObject } from './utils.js';
 
-import { checksumFilePath } from '../global.js';
+import { checksumFilePath as defaultChecksumFilePath } from '../global.js';
 
 export class FilterFiles extends Transform {
 
   #checksumData;
   #fileStream;
+  #appendChecksum;
 
-  constructor(options = {}) {
+  constructor({ appendChecksum = false, checksumFilePath = defaultChecksumFilePath, ...options } = {}) {
 
     super({ objectMode: true, ...options });
 
-    this.#checksumData = readChecksumFile(options.checksumFilePath ?? checksumFilePath);
-    this.#fileStream = createWriteChecksumFileStream(options.checksumFilePath ?? checksumFilePath);
+    this.#appendChecksum = appendChecksum;
+
+    this.#checksumData = readChecksumFile(checksumFilePath);
+    this.#fileStream = createWriteChecksumFileStream(checksumFilePath, appendChecksum);
 
   }
 
@@ -25,9 +28,17 @@ export class FilterFiles extends Transform {
     const fileName = chunk.history[0];
     const fileChecksum = calculateChecksum(chunk.contents);
 
-    this.#fileStream.write(`${fileName} ${fileChecksum}${EOL}`);
-
     if (isNonEmptyObject(this.#checksumData)) {
+
+      if (this.#appendChecksum && !(fileName in this.#checksumData)) {
+
+        this.#fileStream.write(`${fileName} ${fileChecksum}${EOL}`);
+
+      } else if (!this.#appendChecksum) {
+
+        this.#fileStream.write(`${fileName} ${fileChecksum}${EOL}`);
+
+      }
 
       if (fileChecksum === this.#checksumData[fileName]) {
 
@@ -36,6 +47,8 @@ export class FilterFiles extends Transform {
       }
 
     }
+
+    this.#fileStream.write(`${fileName} ${fileChecksum}${EOL}`);
 
     this.push(chunk, enc);
     callback();

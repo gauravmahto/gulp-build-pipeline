@@ -1,9 +1,24 @@
 import { createWriteStream, readFileSync } from 'node:fs'
 import { EOL } from 'node:os';
 
-export function createWriteChecksumFileStream(filePath) {
+import logger from './logger.js'
 
-  return createWriteStream(filePath, { autoClose: true });
+export function createWriteChecksumFileStream(filePath, append = false) {
+
+  const options = { autoClose: true };
+
+  if (append) {
+
+    options.flags = 'a';
+
+  }
+
+  return createWriteStream(filePath, options)
+    .on('error', function (err) {
+
+      logger.error('Checksum file create/open error:', err.message);
+
+    });
 
 }
 
@@ -21,8 +36,10 @@ export function readChecksumFile(filePath) {
 
     data = readFileSync(filePath, { encoding: 'utf-8' });
 
-  } catch {
-    // noop
+  } catch (err) {
+
+    logger.error(`Error reading checksum file: ${err.message}`);
+
   }
 
   return Object.fromEntries(data?.

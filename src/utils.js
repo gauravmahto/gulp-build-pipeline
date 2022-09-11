@@ -1,5 +1,7 @@
 import { createHash } from 'node:crypto'
 
+import logger from './logger.js'
+
 export function callCb(cb, ...args) {
 
   if (typeof cb === 'function') {
@@ -9,7 +11,8 @@ export function callCb(cb, ...args) {
   } else {
 
     console.trace('Callback is not a function');
-    console.log('Passed arguments:', ...args);
+
+    logger.error('Passed arguments:', ...args);
 
   }
 

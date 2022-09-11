@@ -26,14 +26,26 @@ const argv = yargs(hideBin(process.argv)).
     description: 'Enable checksum support',
     default: true
   }).
+  option('appendChecksum', {
+    alias: 'a',
+    type: 'boolean',
+    description: 'Append checksum data to the checksum file',
+    default: false
+  }).
   option('srcPathGlob', {
     alias: 'srcG',
     type: 'string',
-    description: 'The absolute path of the source files directory to minify',
+    description: 'The absolute path globs of the source files directory to minify',
     normalize: true
   }).
-  option('distPath', {
-    alias: 'dist',
+  option('srcPathGlobs', {
+    alias: 'srcGs',
+    type: 'array',
+    description: 'The array absolute path globs of the source files directory to minify',
+    normalize: true
+  }).
+  option('destPath', {
+    alias: 'dest',
     type: 'string',
     description: 'The absolute path of the destination put of the minified files',
     normalize: true
@@ -42,7 +54,9 @@ const argv = yargs(hideBin(process.argv)).
 
 globalThis.enableMinification = argv.enableMinification;
 globalThis.enableChecksumSupport = argv.enableChecksumSupport;
+globalThis.appendChecksum = argv.appendChecksum;
 globalThis.enableSourceMap = argv.enableSourceMap;
 globalThis.mergeOutput = argv.mergeOutput;
 globalThis.srcPathGlob = argv.srcPathGlob;
-globalThis.distPath = argv.distPath;
+globalThis.srcPathGlobs = argv.srcPathGlobs;
+globalThis.destPath = argv.destPath;
