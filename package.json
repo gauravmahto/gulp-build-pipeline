@@ -11,8 +11,8 @@
     "module": "nodenext"
   },
   "scripts": {
-    "clean": "npx gulp build:clean",
-    "babel": "npx gulp build:babel",
+    "clean": "npx gulp cleanTask",
+    "babel": "npx gulp babelTask",
     "build": "npx gulp",
     "help": "node config.js --help"
   },

@@ -13,16 +13,16 @@ import { readGlobalState } from './utils.js';
 
 import { srcGlob, destPath as defaultDistPath } from '../global.js';
 
-const { task, src, dest, series } = gulp;
+const { src, dest, watch, series } = gulp;
 const { init, write } = gulpSourcemaps;
 
-const enableSourceMap = readGlobalState('enableSourceMap');
-const enableMinification = readGlobalState('enableMinification');
-const mergeOutput = readGlobalState('mergeOutput');
-const enableChecksumSupport = readGlobalState('enableChecksumSupport');
-const appendChecksum = readGlobalState('appendChecksum');
-const srcPathGlob = readGlobalState('srcPathGlob');
-const srcPathGlobs = readGlobalState('srcPathGlobs');
+export const enableSourceMap = readGlobalState('enableSourceMap');
+export const enableMinification = readGlobalState('enableMinification');
+export const mergeOutput = readGlobalState('mergeOutput');
+export const enableChecksumSupport = readGlobalState('enableChecksumSupport');
+export const appendChecksum = readGlobalState('appendChecksum');
+export const srcPathGlob = readGlobalState('srcPathGlob');
+export const srcPathGlobs = readGlobalState('srcPathGlobs');
 
 const destPath = readGlobalState('destPath');
 
@@ -34,15 +34,15 @@ if (enableMinification) {
 
 }
 
-task('build:clean', () => {
+export function cleanTask() {
 
   return deleteAsync([
     defaultDistPath
   ]);
 
-});
+}
 
-task('build:babel', () => {
+export function babelTask() {
 
   return src(srcPathGlobs ?? srcPathGlob ?? srcGlob)
     .pipe(gulpif(enableChecksumSupport, new FilterFiles({ appendChecksum })))
@@ -66,6 +66,10 @@ task('build:babel', () => {
     .pipe(dest(destPath ?? defaultDistPath))
     .pipe(debug({ title: 'Minified' }));
 
-});
+}
 
-export default task('default', series(['build:clean', 'build:babel']))
+export function watchBabelTask() {
+
+  watch(srcPathGlobs ?? srcPathGlob ?? srcGlob, series(babelTask));
+
+}
