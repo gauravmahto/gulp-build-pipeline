@@ -4,7 +4,7 @@ import gulpSourcemaps from 'gulp-sourcemaps';
 import babel from 'gulp-babel';
 import concat from 'gulp-concat';
 import gulpif from 'gulp-if';
-import debug from 'gulp-debug';;
+import debug from 'gulp-debug';
 import { deleteAsync } from 'del';
 
 import { FilterFiles } from './filter-files.js';
