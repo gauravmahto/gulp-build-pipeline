@@ -126,3 +126,9 @@ export async function swcTask() {
   return result;
 
 }
+
+export function watchSwcTask() {
+
+  watch(srcPathGlobs ?? srcPathGlob ?? srcGlob, series(swcTask));
+
+}

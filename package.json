@@ -13,6 +13,7 @@
   "scripts": {
     "clean": "npx gulp cleanTask",
     "babel": "npx gulp babelTask",
+    "swc": "npx gulp swcTask",
     "build": "npx gulp",
     "help": "node config.js --help"
   },
