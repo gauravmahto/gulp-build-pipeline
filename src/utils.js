@@ -88,7 +88,7 @@ export function getObjectValueByString(obj, stringPath) {
 
 }
 
-export function addObjectValueByString(obj, stringPath, leafValue, pathArr) {
+export function addObjectValueByString(obj, stringPath, leafValue, pathArr /** private */) {
 
   if (typeof obj === 'undefined' || obj === null || typeof obj !== 'object' || typeof stringPath !== 'string') {
 
@@ -103,7 +103,7 @@ export function addObjectValueByString(obj, stringPath, leafValue, pathArr) {
 
     const pathArr = stringPath.split('.');
 
-    this.addObjectValueByString(obj, stringPath, leafValue, pathArr)
+    addObjectValueByString(obj, stringPath, leafValue, pathArr)
 
   }
 
@@ -123,9 +123,13 @@ export function addObjectValueByString(obj, stringPath, leafValue, pathArr) {
 
   }
 
-  obj[currentPath] = {}
+  if (!isValidObject(obj[currentPath])) {
 
-  this.addObjectValueByString(obj[currentPath], stringPath, leafValue, pathArr)
+    obj[currentPath] = {};
+
+  }
+
+  addObjectValueByString(obj[currentPath], stringPath, leafValue, pathArr)
 
 }
 

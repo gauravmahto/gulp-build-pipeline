@@ -7,6 +7,6 @@ import { cleanTask, babelTask } from './src/index.js';
 
 const { series } = gulp;
 
-export { watchBabelTask, cleanTask, babelTask } from './src/index.js';
+export { watchBabelTask, cleanTask, babelTask, swcTask } from './src/index.js';
 
 export default series(cleanTask, babelTask);
